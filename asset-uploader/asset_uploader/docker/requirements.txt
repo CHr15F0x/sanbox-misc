@@ -1,0 +1,5 @@
+boto3==1.9.98
+PasteScript==2.0.2
+plaster_pastedeploy==0.4.1
+pyramid==1.9.2
+uWSGI==2.0.17.1

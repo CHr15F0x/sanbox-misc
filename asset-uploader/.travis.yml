@@ -1,0 +1,14 @@
+language: python
+python:
+  - "3.5"
+before_install: cd ./asset_uploader/docker/uwsgi_app
+install:
+  - pip3 install codecov
+  - pip3 install -r ../requirements.txt
+  - pip3 install -r ./requirements-dev.txt
+  - pip3 install -e .
+script:
+  - cd asset_uploader
+  - pytest --cov=asset_uploader tests/
+after_success:
+  - codecov

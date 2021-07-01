@@ -1,0 +1,3 @@
+[submodule "third_party/makeself"]
+	path = third_party/makeself
+	url = https://github.com/megastep/makeself.git

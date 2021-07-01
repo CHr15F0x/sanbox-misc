@@ -1,0 +1,35 @@
+language:
+   - cpp
+
+compiler:
+  - clang
+  - gcc
+
+script:
+    - cmake .
+    - make
+    - make ARGS=-V test
+
+branches:
+  only:
+    - master
+
+notifications:
+      email: false
+
+addons:
+  apt:
+    packages:
+      lcov
+      qtbase5-dev
+      libsdl2-dev
+      libsdl2-ttf-dev
+      libsdl2-gfx-dev
+
+after_success:
+# Create lcov report
+- lcov --capture --directory . --output-file coverage.info
+- lcov --remove coverage.info '/usr/*' --output-file coverage.info # filter system-files
+- lcov --list coverage.info # debug info
+# Uploading report to CodeCov
+- bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"

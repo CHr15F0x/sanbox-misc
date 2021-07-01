@@ -1,0 +1,33 @@
+FROM python:3.7.0-alpine
+
+COPY requirements.txt /
+
+COPY uwsgi_app /app
+
+RUN cd /app; \
+    rm -rf /app/build; \
+    rm -rf /app/dist; \
+    rm -rf /app/asset_uploader.egg-info; \
+    rm -rf /app/venv; \
+    rm -rf /app/.eggs
+
+RUN addgroup -S uwsgi && adduser -S uwsgi -G uwsgi
+
+# Install a virtual package to be able to build and install uwsgi and then remove it (as it's not needed anymore)
+RUN apk update; \
+    apk add --no-cache --virtual .build-deps gcc libc-dev linux-headers; \
+    pip install -r requirements.txt; \
+    apk del .build-deps; \
+    rm /requirements.txt; \
+    cd /app && python3 setup.py install; \
+    rm -rf /app/asset_uploader; \
+    rm -rf /app/dist; \
+    rm -rf /app/build; \
+    rm -rf /app/asset_uploader.egg-info; \
+    rm -f /app/setup.py; \
+    chown uwsgi:uwsgi /app
+
+# Don't run as root
+USER uwsgi
+
+CMD uwsgi --ini /app/uwsgi.ini

@@ -1,0 +1,14 @@
+[Unit]
+Description=Asset Uploader Service
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=simple
+Restart=always
+WorkingDirectory=/etc/asset-uploader
+ExecStart=/usr/bin/env docker-compose up
+ExecStop=/usr/bin/env docker-compose down -v
+
+[Install]
+WantedBy=multi-user.target
